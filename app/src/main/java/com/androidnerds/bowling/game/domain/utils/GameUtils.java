@@ -1,6 +1,6 @@
 package com.androidnerds.bowling.game.domain.utils;
 
-import com.androidnerds.bowling.game.domain.constants.GameConstants;
+import com.androidnerds.bowling.game.domain.constant.GameConstants;
 
 public final class GameUtils {
 

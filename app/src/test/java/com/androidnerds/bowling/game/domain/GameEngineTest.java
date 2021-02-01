@@ -22,7 +22,7 @@ public class GameEngineTest {
 
     @Test
     public void rollGameWithNoBonus() {
-        GameEngine gameEngine = new GameEngine();
+        GameEngine gameEngine = GameEngine.getInstance();
         gameEngine.init();
 
         int[] inputs = {
@@ -47,7 +47,7 @@ public class GameEngineTest {
 
     @Test
     public void rollGutter() {
-        GameEngine gameEngine = new GameEngine();
+        GameEngine gameEngine = GameEngine.getInstance();
         gameEngine.init();
 
         int[] inputs = {
@@ -72,7 +72,7 @@ public class GameEngineTest {
 
     @Test
     public void rollPerfectTen() {
-        GameEngine gameEngine = new GameEngine();
+        GameEngine gameEngine = GameEngine.getInstance();
         gameEngine.init();
 
         int[] inputs = {
@@ -99,7 +99,7 @@ public class GameEngineTest {
 
     @Test
     public void rollGameWithStrikeOnLastFrameAndStrikeOnBonus1() {
-        GameEngine gameEngine = new GameEngine();
+        GameEngine gameEngine = GameEngine.getInstance();
         gameEngine.init();
 
         int[] inputs = {
@@ -126,7 +126,7 @@ public class GameEngineTest {
 
     @Test
     public void rollGameWithStrikeOnLastFrameAndSpareOnBonus() {
-        GameEngine gameEngine = new GameEngine();
+        GameEngine gameEngine = GameEngine.getInstance();
         gameEngine.init();
 
         int[] inputs = {
@@ -152,7 +152,7 @@ public class GameEngineTest {
 
     @Test
     public void rollGameWithSpareOnLastFrameAndStrikeOnBonus() {
-        GameEngine gameEngine = new GameEngine();
+        GameEngine gameEngine = GameEngine.getInstance();
         gameEngine.init();
 
         int[] inputs = {
@@ -178,7 +178,7 @@ public class GameEngineTest {
 
     @Test
     public void rollGameWithSpareOnLastFrame() {
-        GameEngine gameEngine = new GameEngine();
+        GameEngine gameEngine = GameEngine.getInstance();
         gameEngine.init();
 
         int[] inputs = {
@@ -213,7 +213,7 @@ public class GameEngineTest {
 
     @Test
     public void rollGameWithInvalidPoints() {
-        GameEngine gameEngine = new GameEngine();
+        GameEngine gameEngine = GameEngine.getInstance();
         gameEngine.init();
 
         int[] inputs = { 11, -1 };
@@ -225,7 +225,7 @@ public class GameEngineTest {
 
     @Test
     public void rollGameWithInvalidSecondRollsForFrame() {
-        GameEngine gameEngine = new GameEngine();
+        GameEngine gameEngine = GameEngine.getInstance();
         gameEngine.init();
 
         int[] inputs = {9,2};

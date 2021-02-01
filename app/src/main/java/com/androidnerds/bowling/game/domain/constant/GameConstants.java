@@ -1,4 +1,4 @@
-package com.androidnerds.bowling.game.domain.constants;
+package com.androidnerds.bowling.game.domain.constant;
 
 public final class GameConstants {
 

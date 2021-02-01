@@ -1,58 +1,58 @@
-package com.androidnerds.bowling.game.domain.model;
+package com.androidnerds.bowling.game.domain;
+
+import android.util.Log;
 
 import androidx.annotation.NonNull;
+
+import com.androidnerds.bowling.game.domain.constant.GameConstants;
+import com.androidnerds.bowling.game.domain.model.Frame;
+import com.androidnerds.bowling.game.domain.model.Player;
+import com.androidnerds.bowling.game.domain.model.Scoreboard;
+import com.androidnerds.bowling.game.domain.utils.GameUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ScoreBoard {
+import static com.androidnerds.bowling.game.domain.GameEngine.TAG;
 
-    private Player player;
-    private List<Frame> frames;
-    private int totalScore;
+public class ScoreboardHandler {
 
-    public ScoreBoard(@NonNull Player player, int maxFrames) {
-        this.player = player;
-        this.frames = new ArrayList<>();
-        for (int i = 0; i < maxFrames; i++) {
-            this.frames.add(new Frame());
+    private Scoreboard scoreBoard;
+    private int currentRoll = 1;
+    private int currentFrameIndex = 0;
+
+    public ScoreboardHandler(@NonNull Scoreboard scoreBoard) {
+        this.scoreBoard = scoreBoard;
+    }
+
+    public boolean updateScore(int points) {
+        if(!isValidPoint(points)) {
+            return false;
         }
-    }
-
-    public Player getPlayer() {
-        return player;
-    }
-
-    public List<Frame> getFrames() {
-        return frames;
-    }
-
-    public int getTotalScore() {
-        return totalScore;
-    }
-
-    public void setTotalScore(int totalScore) {
-        this.totalScore = totalScore;
-    }
-
-    /*public void updateScore(int points) {
+        Log.i(TAG, "********* START OF FRAME " + currentFrameIndex + " *********");
         Log.i(TAG, "updateScore(frameIndex: " + currentFrameIndex + ", roll: " + currentRoll + ", points:" + points + ")");
-        Frame frame = this.frames.get(currentFrameIndex);
-        List<Integer> rolls = frame.getRolls();
-        rolls.add(points);
-        if (frame.getFrameStatus() == Frame.FrameStatus.EMPTY) {
-            frame.setFrameStatus(Frame.FrameStatus.PLAYED);
-        }
-        frame.setTotalScore(frame.getTotalScore() + points);
+        Frame frame = this.getFrames().get(currentFrameIndex);
+        updatePointsToFrame(frame, points);
         Log.i(TAG, "totalScore(frameIndex:" + currentFrameIndex + ") = " + frame.getTotalScore());
-
         if (!isLastFrame(currentFrameIndex)) {
             updateBonusRollsForFrame(frame);
         }
+        updateBonusForPreviousFrames(this.getFrames(), currentFrameIndex, points);
+        updateCumulativeScores(this.getFrames(), currentFrameIndex);
+        updateRollAndFrameIndices(frame);
+        return true;
+    }
 
-        addBonusForPreviousFrames(frames, currentFrameIndex, points);
-        updateCumulativeScores(frames, currentFrameIndex);
+    private void updatePointsToFrame(Frame frame, int points) {
+        List<Integer> rolls = frame.getRolls();
+        rolls.add(points);
+        if (frame.getFrameStatus() == Frame.FrameStatus.EMPTY) {
+            frame.setFrameStatus(Frame.FrameStatus.PLAYING);
+        }
+        frame.setTotalScore(frame.getTotalScore() + points);
+    }
 
+    private void updateRollAndFrameIndices(@NonNull Frame frame) {
         if (isLastFrame(currentFrameIndex)) {
             currentRoll++;
         } else {
@@ -66,6 +66,7 @@ public class ScoreBoard {
             }
             //Update the frame Index
             if (GameUtils.isNextFrame(currentRoll)) {
+                frame.setFrameStatus(Frame.FrameStatus.COMPLETED);
                 Log.i(TAG, "********* END OF FRAME " + (currentFrameIndex + 1) + " *********");
                 currentFrameIndex++;
                 Log.i(TAG, "********* START OF FRAME " + (currentFrameIndex + 1) + " *********");
@@ -85,35 +86,64 @@ public class ScoreBoard {
 
     private void updateCumulativeScores(List<Frame> frames, int frameIndex) {
         //Find if two rolls before the current is a Strike.
-        //If is Strike - add the
-        int cumulativeTotal = 0;
-        for (int i = 0; i <= frameIndex; i++) {
+        int i = frameIndex - 2;
+        if(i < 0){
+            i = 0;
+        }
+        for (; i <= frameIndex; i++) {
             Frame frame = frames.get(i);
-            if (frame.getBonusRolls() == 0) {
-                cumulativeTotal += frame.getTotalScore() + frame.getBonusScore();
-                frame.setCumulativeScore(cumulativeTotal);
-                Log.i(TAG, "cumulativeScore(frameIndex:" + i + ") = " + frames.get(i).getCumulativeScore());
+
+            Frame previousFrame = i > 0 ? frames.get(i-1):null;
+            if(isLastFrame(i)) {
+                List<Integer> rolls = frame.getRolls();
+                if(rolls.size() == 2 && (!GameUtils.isStrike(rolls.get(0)) && !isRollASpare(frame))) {
+                    calculateCumulativeScoreForFrame(frame, previousFrame);
+                }else if(rolls.size() == 3) {
+                    calculateCumulativeScoreForFrame(frame, previousFrame);
+                }
+            }else {
+                if((isRollAStrike(frame) || isRollASpare(frame))) {
+                    if(frame.getBonusRolls() == 0) {
+                        calculateCumulativeScoreForFrame(frame, previousFrame);
+                    }
+                }else if(frame.getRolls().size() == 2) {
+                    calculateCumulativeScoreForFrame(frame, previousFrame);
+                }
             }
         }
     }
 
-    public int getCurrentFrameIndex() {
-        return currentFrameIndex;
+    private void calculateCumulativeScoreForFrame(Frame currentFrame, Frame previousFrame) {
+        int cumulativeTotal = 0;
+        if (null != previousFrame) {
+            cumulativeTotal = previousFrame.getCumulativeScore();
+        }
+        cumulativeTotal += currentFrame.getTotalScore() + currentFrame.getBonusScore();
+        currentFrame.setCumulativeScore(cumulativeTotal);
+        Log.i(TAG, "cumulativeScore(frameNumber:" + currentFrame.getFrameNumber() + ") = " + currentFrame.getCumulativeScore());
+    }
+
+    private boolean hasBonusRollsLeft(@NonNull Frame frame) {
+        return frame.getBonusRolls() != 0;
     }
 
     public List<Frame> getFrames() {
-        return frames;
+        return null != scoreBoard ? scoreBoard.getFrames(): null;
     }
 
     public Player getPlayer() {
-        return player;
+        return null != scoreBoard ? scoreBoard.getPlayer(): null;
     }
 
-    private void addBonusForPreviousFrames(List<Frame> frames, int currentFrameIndex, int points) {
+    private void updateBonusForPreviousFrames(List<Frame> frames, int currentFrameIndex, int points) {
         Log.i(TAG, "addBonusForPreviousFrames(currentFrameIndex:" + currentFrameIndex + ", points: " + points + ")");
+        int i = currentFrameIndex - 2;
+        if (i < 0) {
+            i = 0;
+        }
         if (currentFrameIndex > 0) {
             Log.i(TAG, "currentFrameIndex > 0");
-            for (int i = 0; i < currentFrameIndex; i++) {
+            for (; i < currentFrameIndex; i++) {
                 int bonusRolls = frames.get(i).getBonusRolls();
                 Log.i(TAG, "(bonusRolls, frameIndex) = " + bonusRolls + "," + i);
                 if (bonusRolls > 0) {
@@ -127,30 +157,31 @@ public class ScoreBoard {
     }
 
     public boolean isValidPoint(int points) {
-        return GameUtils.isValidPoint(points) && currentFrameIndex < frames.size() && isValidPointFor(currentFrameIndex, points);
+        return GameUtils.isValidPoint(points) && currentFrameIndex < this.getFrames().size() && isValidPointFor(currentFrameIndex, points);
     }
 
-    private boolean isRollAStrike(int frameIndex) {
-        return isRollAStrike(frames.get(frameIndex));
-    }
 
     private boolean isRollAStrike(@NonNull Frame frame) {
         return frame.getRolls().size() == 1 && GameUtils.isStrike(frame.getTotalScore());
     }
 
+    private boolean isRollAStrike(int frameIndex) {
+        return isRollAStrike(this.getFrames().get(frameIndex));
+    }
+
     private boolean isRollASpare(@NonNull Frame frame) {
-        return frame.getRolls().size() == 2 && GameUtils.isStrike(frame.getTotalScore());
+        return frame.getRolls().size() == 2 && GameUtils.isSpare(frame.getRolls().get(1), frame.getRolls().get(0));
     }
 
     private boolean isValidPointFor(int frameIndex, int points) {
-        if (frameIndex == frames.size() - 1) {
+        if (frameIndex == this.getFrames().size() - 1) {
             return validForLastFrame(points);
         }
-        return GameUtils.isValidPoint(points, frames.get(frameIndex).getTotalScore());
+        return GameUtils.isValidPointWithPreviousPointAs(points, this.getFrames().get(frameIndex).getTotalScore());
     }
 
     private boolean validForLastFrame(int points) {
-        Frame frame = frames.get(frames.size() - 1);
+        Frame frame = this.getFrames().get(this.getFrames().size() - 1);
         List<Integer> rolls = frame.getRolls();
         if (rolls.size() == 0) {
             return true;
@@ -172,21 +203,17 @@ public class ScoreBoard {
         if (GameUtils.isStrike(previousRoll)) {
             return true;
         } else {
-            return GameUtils.isValidPoint(points, previousRoll);
+            return GameUtils.isValidPointWithPreviousPointAs(points, previousRoll);
         }
     }
 
     private boolean isLastFrame(int frameIndex) {
-        return frameIndex == frames.size() - 1;
-    }
-
-    private boolean isValidFrameIndex(int frameIndex) {
-        return frameIndex >= 0 && frameIndex < frames.size();
+        return frameIndex == this.getFrames().size() - 1;
     }
 
     @NonNull
     public List<Integer> getPossiblePoints() {
-        Frame frame = frames.get(currentFrameIndex);
+        Frame frame = this.getFrames().get(currentFrameIndex);
         List<Integer> rolls = frame.getRolls();
         int end = GameConstants.MAX_POINTS_FOR_ROLL;
         if (isLastFrame(currentFrameIndex)) {
@@ -213,6 +240,5 @@ public class ScoreBoard {
             possiblePoints.add(i);
         }
         return possiblePoints;
-    }*/
-
+    }
 }

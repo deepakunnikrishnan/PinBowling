@@ -1,8 +1,8 @@
 package com.androidnerds.bowling.game.domain;
 
-import com.androidnerds.bowling.game.domain.constants.GameConstants;
+import com.androidnerds.bowling.game.domain.constant.GameConstants;
 import com.androidnerds.bowling.game.domain.model.Player;
-import com.androidnerds.bowling.game.domain.model.ScoreBoard;
+import com.androidnerds.bowling.game.domain.model.Scoreboard;
 
 import org.junit.After;
 import org.junit.Before;
@@ -12,7 +12,7 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class ScoreBoardHandlerTest {
+public class ScoreboardHandlerTest {
 
     @Before
     public void setUp() throws Exception {
@@ -24,7 +24,7 @@ public class ScoreBoardHandlerTest {
 
     @Test
     public void getPossiblePoints() {
-        ScoreBoardHandler scoreBoardHandler = getScoreBoardHandler();
+        ScoreboardHandler scoreBoardHandler = getScoreBoardHandler();
         List<Integer> possiblePoints = scoreBoardHandler.getPossiblePoints();
         assertEquals(11, possiblePoints.size());
 
@@ -65,7 +65,7 @@ public class ScoreBoardHandlerTest {
     @Test
     public void getPossiblePointsWithoutStrikeInFirstRollForLastFrame() {
 
-        ScoreBoardHandler scoreBoardHandler = getScoreBoardHandler();
+        ScoreboardHandler scoreBoardHandler = getScoreBoardHandler();
         List<Integer> possiblePoints = scoreBoardHandler.getPossiblePoints();
         assertEquals(11, possiblePoints.size());
         int[] inputs = {
@@ -89,9 +89,9 @@ public class ScoreBoardHandlerTest {
         assertEquals(1, possiblePoints.get(possiblePoints.size() - 1).intValue());
     }
 
-    private ScoreBoardHandler getScoreBoardHandler() {
+    private ScoreboardHandler getScoreBoardHandler() {
         Player player = new Player("test");
-        ScoreBoard scoreBoard = new ScoreBoard(player, GameConstants.MAX_FRAMES);
-        return new ScoreBoardHandler(scoreBoard);
+        Scoreboard scoreBoard = new Scoreboard(player, GameConstants.MAX_FRAMES);
+        return new ScoreboardHandler(scoreBoard);
     }
 }
