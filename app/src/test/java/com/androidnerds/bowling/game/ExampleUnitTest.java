@@ -1,4 +1,4 @@
-package com.androidnerds.bowling.scorecard;
+package com.androidnerds.bowling.game;
 
 import org.junit.Test;
 
