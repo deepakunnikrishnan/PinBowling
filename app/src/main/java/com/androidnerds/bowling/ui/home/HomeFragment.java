@@ -25,8 +25,6 @@ import java.util.List;
 public class HomeFragment extends Fragment implements View.OnClickListener {
 
     private HomeViewModel mViewModel;
-    private EditText editTextNumber;
-    private Button buttonInput;
     private Button buttonReset;
     private ScoreboardView scoreboardView;
     private PointSelectorView pointSelectorView;
@@ -43,10 +41,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.home_fragment, container, false);
         this.scoreboardView = view.findViewById(R.id.scoreboard);
         this.pointSelectorView = view.findViewById(R.id.pointSelector);
-        this.editTextNumber = view.findViewById(R.id.editTextNumber);
-        this.buttonInput = view.findViewById(R.id.buttonInput);
         this.buttonReset = view.findViewById(R.id.buttonReset);
-        this.buttonInput.setOnClickListener(this);
         this.buttonReset.setOnClickListener(this);
         return view;
     }
@@ -68,10 +63,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.buttonInput) {
-            String number = editTextNumber.getText().toString();
-            gameEngine.roll(Integer.parseInt(number));
-        } else if(v.getId() == R.id.buttonReset) {
+        if(v.getId() == R.id.buttonReset) {
             gameEngine.init();
         }
 
