@@ -21,12 +21,17 @@ public class GameEngine {
         void onScoreboardUpdated(Scoreboard scoreboard);
     }
 
+    public interface OnPossibleValuesChangeListener {
+        void onPossibleValuesChanged(List<Integer> points);
+    }
+
     public static final String TAG = "GameEngine";
     public static final int MAX_FRAMES = GameConstants.MAX_FRAMES;
 
     private static GameEngine gameEngine;
 
     private OnScoreChangeListener scoreChangeListener;
+    private OnPossibleValuesChangeListener valuesChangeListener;
 
     private Scoreboard scoreboard;
     private ScoreboardHandler scoreBoardHandler;
@@ -77,9 +82,16 @@ public class GameEngine {
         if(null != scoreChangeListener) {
             scoreChangeListener.onScoreboardUpdated(this.scoreboard);
         }
+        if(null != valuesChangeListener) {
+            valuesChangeListener.onPossibleValuesChanged(this.scoreBoardHandler.getPossiblePoints());
+        }
     }
 
     public void setScoreChangeListener(OnScoreChangeListener scoreChangeListener) {
         this.scoreChangeListener = scoreChangeListener;
+    }
+
+    public void setValuesChangeListener(OnPossibleValuesChangeListener valuesChangeListener) {
+        this.valuesChangeListener = valuesChangeListener;
     }
 }

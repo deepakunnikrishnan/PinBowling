@@ -123,10 +123,6 @@ public class ScoreboardHandler {
         Log.i(TAG, "cumulativeScore(frameNumber:" + currentFrame.getFrameNumber() + ") = " + currentFrame.getCumulativeScore());
     }
 
-    private boolean hasBonusRollsLeft(@NonNull Frame frame) {
-        return frame.getBonusRolls() != 0;
-    }
-
     public List<Frame> getFrames() {
         return null != scoreBoard ? scoreBoard.getFrames(): null;
     }
@@ -156,10 +152,10 @@ public class ScoreboardHandler {
         }
     }
 
-    public boolean isValidPoint(int points) {
-        return GameUtils.isValidPoint(points) && currentFrameIndex < this.getFrames().size() && isValidPointFor(currentFrameIndex, points);
+    private boolean isValidPoint(int points) {
+        return GameUtils.isValidPoint(points) &&
+                currentFrameIndex < this.getFrames().size() && isValidPointFor(currentFrameIndex, points);
     }
-
 
     private boolean isRollAStrike(@NonNull Frame frame) {
         return frame.getRolls().size() == 1 && GameUtils.isStrike(frame.getTotalScore());
@@ -188,7 +184,7 @@ public class ScoreboardHandler {
         } else if (rolls.size() == 1) {
             int firstRoll = frame.getRolls().get(0);
             return validateWithPreviousRoll(points, firstRoll);
-        } else {
+        } else if(rolls.size() == 2) {
             int firstRoll = frame.getRolls().get(0);
             int secondRoll = frame.getRolls().get(1);
             if (GameUtils.isStrike(firstRoll)) {
@@ -196,6 +192,8 @@ public class ScoreboardHandler {
             } else {
                 return GameUtils.isSpare(secondRoll, firstRoll);
             }
+        } else {
+            return false;
         }
     }
 

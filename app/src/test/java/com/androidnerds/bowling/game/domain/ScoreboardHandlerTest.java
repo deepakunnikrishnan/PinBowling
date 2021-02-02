@@ -43,23 +43,38 @@ public class ScoreboardHandlerTest {
 
         scoreBoardHandler.updateScore(inputs[0]);
 
+        Integer[] expected = {0, 1, 2, 3, 4, 5};
         possiblePoints = scoreBoardHandler.getPossiblePoints();
+        Integer[] actual = new Integer[possiblePoints.size()];
+        possiblePoints.toArray(actual);
         assertEquals(6, possiblePoints.size());
         assertEquals(0, possiblePoints.get(0).intValue());
         assertEquals(5, possiblePoints.get(possiblePoints.size() - 1).intValue());
+        assertArrayEquals(expected, actual);
+
 
         for (int i = 1; i < inputs.length; i++) {
             scoreBoardHandler.updateScore(inputs[i]);
         }
 
+        expected = new Integer[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         possiblePoints = scoreBoardHandler.getPossiblePoints();
+        actual = new Integer[possiblePoints.size()];
+        possiblePoints.toArray(actual);
+
         assertEquals(11, possiblePoints.size());
+        assertArrayEquals(expected, actual);
 
         scoreBoardHandler.updateScore(7);
 
+        expected = new Integer[]{0, 1, 2, 3};
         possiblePoints = scoreBoardHandler.getPossiblePoints();
+        actual = new Integer[possiblePoints.size()];
+        possiblePoints.toArray(actual);
+
         assertEquals(4, possiblePoints.size());
         assertEquals(3, possiblePoints.get(possiblePoints.size() - 1).intValue());
+        assertArrayEquals(expected, actual);
     }
 
     @Test

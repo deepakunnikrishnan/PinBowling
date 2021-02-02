@@ -21,6 +21,7 @@ android {
             res.srcDirs = [
                     'src/main/res/layouts/home',
                     'src/main/res/layouts/scorecard',
+                    'src/main/res/layouts/controls',
                     'src/main/res/layouts',
                     'src/main/res'
             ]

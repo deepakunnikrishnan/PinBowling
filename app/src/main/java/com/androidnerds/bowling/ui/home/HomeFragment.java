@@ -15,8 +15,11 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.androidnerds.bowling.R;
+import com.androidnerds.bowling.game.components.controls.pointselector.PointSelectorView;
 import com.androidnerds.bowling.game.components.scoreboard.ScoreboardView;
 import com.androidnerds.bowling.game.domain.GameEngine;
+
+import java.util.List;
 
 
 public class HomeFragment extends Fragment implements View.OnClickListener {
@@ -26,6 +29,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private Button buttonInput;
     private Button buttonReset;
     private ScoreboardView scoreboardView;
+    private PointSelectorView pointSelectorView;
     private GameEngine gameEngine;
 
     public static HomeFragment newInstance() {
@@ -38,6 +42,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.home_fragment, container, false);
         this.scoreboardView = view.findViewById(R.id.scoreboard);
+        this.pointSelectorView = view.findViewById(R.id.pointSelector);
         this.editTextNumber = view.findViewById(R.id.editTextNumber);
         this.buttonInput = view.findViewById(R.id.buttonInput);
         this.buttonReset = view.findViewById(R.id.buttonReset);
@@ -50,11 +55,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
-
+        this.pointSelectorView.setOnPointSelectedChangeListener(this::onInputEntered);
         gameEngine = GameEngine.getInstance();
+        gameEngine.setValuesChangeListener(points -> pointSelectorView.showPoints(points));
         gameEngine.init();
         this.scoreboardView.setupGameEngine(gameEngine);
-
     }
 
     private void onInputEntered(int points) {
