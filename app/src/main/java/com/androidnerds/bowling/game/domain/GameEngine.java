@@ -34,7 +34,10 @@ import java.util.List;
  *     to {@link GameStatus#GAME_OVER}
  * </p>
  *
- *
+ * <p>
+ *     GameEngine class also provides option to reset the game via {@link GameEngine#init()}. Once initialized, it would change the
+ *     the status is changed to {@link GameStatus#GAME_STARTED}.
+ * </p>
  *
  */
 public class GameEngine {
@@ -53,8 +56,8 @@ public class GameEngine {
         void onPossibleValuesChanged(List<Integer> points);
     }
 
-    public interface OnGameCompletionListener {
-        void onGameCompleted();
+    public interface OnGameStatusChangedListener {
+        void onGameStatusChanged(GameStatus gameStatus);
     }
 
     public static final String TAG = "GameEngine";
@@ -64,7 +67,7 @@ public class GameEngine {
 
     private OnScoreChangeListener scoreChangeListener;
     private OnPossibleValuesChangeListener valuesChangeListener;
-    private OnGameCompletionListener gameCompletionListener;
+    private OnGameStatusChangedListener gameStatusChangedListener;
 
     private Scoreboard scoreboard;
     private ScoreboardHandler scoreBoardHandler;
@@ -91,7 +94,7 @@ public class GameEngine {
         this.playerList.add(new Player("Player 1"));
         this.scoreboard = new Scoreboard(this.playerList.get(0), MAX_FRAMES);
         this.scoreBoardHandler = new ScoreboardHandler(scoreboard);
-        gameStatus = GameStatus.GAME_STARTED;
+        setGameStatus(GameStatus.GAME_STARTED);
         sendScoreChangeListenerCallback();
     }
 
@@ -99,6 +102,13 @@ public class GameEngine {
         return scoreboard;
     }
 
+    /**
+     * Method to provide the pins down after rolling the ball.
+     * Validates the input that was passed
+     * @param points - no:of pins down
+     * @return
+     * @throws GameNotInitializedException
+     */
     public boolean roll(int points) throws GameNotInitializedException {
         if(!validateGameStatus()) {
             throw new GameNotInitializedException();
@@ -111,10 +121,7 @@ public class GameEngine {
             Log.i(TAG, "roll(" + points + ")" + " Invalid points");
         }
         if (this.scoreBoardHandler.isGameOver()) {
-            gameStatus = GameStatus.GAME_OVER;
-            if (null != gameCompletionListener) {
-                gameCompletionListener.onGameCompleted();
-            }
+            setGameStatus(GameStatus.GAME_OVER);
         }
         return updated;
     }
@@ -132,6 +139,17 @@ public class GameEngine {
         }
     }
 
+    private void setGameStatus(GameStatus gameStatus) {
+        this.gameStatus = gameStatus;
+        sendGameStatusChangedListenerCallback(gameStatus);
+    }
+
+    private void sendGameStatusChangedListenerCallback(GameStatus gameStatus) {
+        if(null != gameStatusChangedListener) {
+            this.gameStatusChangedListener.onGameStatusChanged(gameStatus);
+        }
+    }
+
     public void setScoreChangeListener(OnScoreChangeListener scoreChangeListener) {
         this.scoreChangeListener = scoreChangeListener;
     }
@@ -140,7 +158,8 @@ public class GameEngine {
         this.valuesChangeListener = valuesChangeListener;
     }
 
-    public void setGameCompletionListener(OnGameCompletionListener gameCompletionListener) {
-        this.gameCompletionListener = gameCompletionListener;
+    public void setGameStatusChangedListener(OnGameStatusChangedListener gameCompletionListener) {
+        this.gameStatusChangedListener = gameCompletionListener;
     }
+
 }

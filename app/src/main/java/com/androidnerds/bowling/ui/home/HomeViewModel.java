@@ -11,8 +11,7 @@ import com.androidnerds.bowling.game.domain.model.Scoreboard;
 import java.util.List;
 
 public class HomeViewModel extends ViewModel implements GameEngine.OnPossibleValuesChangeListener,
-        GameEngine.OnScoreChangeListener, GameEngine.OnGameCompletionListener {
-    // TODO: Implement the ViewModel
+        GameEngine.OnScoreChangeListener, GameEngine.OnGameStatusChangedListener {
 
     private final GameEngine gameEngine;
 
@@ -33,7 +32,7 @@ public class HomeViewModel extends ViewModel implements GameEngine.OnPossibleVal
         gameEngine = GameEngine.getInstance();
         gameEngine.setValuesChangeListener(this);
         gameEngine.setScoreChangeListener(this);
-        gameEngine.setGameCompletionListener(this);
+        gameEngine.setGameStatusChangedListener(this);
         gameEngine.init();
     }
 
@@ -60,8 +59,10 @@ public class HomeViewModel extends ViewModel implements GameEngine.OnPossibleVal
         gameEngine.init();
     }
 
+
     @Override
-    public void onGameCompleted() {
-        _gameCompletionStatusLiveData.postValue(true);
+    public void onGameStatusChanged(GameEngine.GameStatus gameStatus) {
+        _gameCompletionStatusLiveData.postValue(gameStatus == GameEngine.GameStatus.GAME_OVER);
+
     }
 }

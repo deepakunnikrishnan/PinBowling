@@ -44,7 +44,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void observeViewModel(HomeViewModel mViewModel) {
-        mViewModel.gameCompletionStatusLiveData.observe(getViewLifecycleOwner(), status -> onGameCompleted());
+        mViewModel.gameCompletionStatusLiveData.observe(getViewLifecycleOwner(), this::onGameCompleted);
         mViewModel.messagesLiveData.observe(getViewLifecycleOwner(), this::onMessageReceived);
     }
 
@@ -56,8 +56,10 @@ public class HomeFragment extends Fragment {
         Toast.makeText(getActivity(), message,Toast.LENGTH_SHORT).show();
     }
 
-    private void onGameCompleted() {
-        Toast.makeText(getActivity(), "Game over",Toast.LENGTH_SHORT).show();
+    private void onGameCompleted(boolean status) {
+        if(status) {
+            Toast.makeText(getActivity(), "Game over",Toast.LENGTH_SHORT).show();
+        }
     }
 
 }
