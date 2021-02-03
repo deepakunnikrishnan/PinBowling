@@ -197,6 +197,13 @@ public class ScoreboardHandler {
         return scoreBoard.getPlayer();
     }
 
+    /**
+     * Calculates the bonus for the previous frames with Strike/Spare.
+     * After adding to the bonus point, the bonus rolls for that frame is decremented.
+     * @param frames
+     * @param currentFrameIndex
+     * @param points
+     */
     private void updateBonusForPreviousFrames(List<Frame> frames, int currentFrameIndex, int points) {
         Log.d(TAG, "addBonusForPreviousFrames(currentFrameIndex:" + currentFrameIndex + ", points: " + points + ")");
         int i = currentFrameIndex - 2;
@@ -267,6 +274,11 @@ public class ScoreboardHandler {
         return frameIndex == this.getFrames().size() - 1;
     }
 
+    /**
+     * Method returns the list of points that are possible for the next roll.
+     * It is calculated based on the frameIndex and the no:of rolls left in the frame.
+     * @return
+     */
     @NonNull
     public List<Integer> getPossiblePoints() {
         int end = MAX_POINTS_FOR_ROLL;
