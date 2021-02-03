@@ -3,7 +3,6 @@ package com.androidnerds.bowling.ui.home;
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.lifecycle.Observer;
 
-import com.androidnerds.bowling.game.domain.GameEngine;
 import com.androidnerds.bowling.game.domain.model.Scoreboard;
 
 import org.junit.Before;
