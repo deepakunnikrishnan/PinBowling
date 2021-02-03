@@ -17,7 +17,7 @@ import static com.androidnerds.bowling.game.domain.constant.GameConstants.MAX_PO
 
 public class ScoreboardHandler {
 
-    private Scoreboard scoreBoard;
+    private final Scoreboard scoreBoard;
     private int currentRoll = 1;
     private int currentFrameIndex = 0;
 
@@ -144,11 +144,11 @@ public class ScoreboardHandler {
     }
 
     public List<Frame> getFrames() {
-        return null != scoreBoard ? scoreBoard.getFrames() : null;
+        return scoreBoard.getFrames();
     }
 
     public Player getPlayer() {
-        return null != scoreBoard ? scoreBoard.getPlayer() : null;
+        return scoreBoard.getPlayer();
     }
 
     private void updateBonusForPreviousFrames(List<Frame> frames, int currentFrameIndex, int points) {

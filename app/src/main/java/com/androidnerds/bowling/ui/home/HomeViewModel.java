@@ -14,7 +14,7 @@ public class HomeViewModel extends ViewModel implements GameEngine.OnPossibleVal
         GameEngine.OnScoreChangeListener, GameEngine.OnGameCompletionListener {
     // TODO: Implement the ViewModel
 
-    GameEngine gameEngine;
+    private final GameEngine gameEngine;
 
     private final MutableLiveData<List<Integer>> _possibleValues = new MutableLiveData<>();
     public final LiveData<List<Integer>> possibleValues = _possibleValues;

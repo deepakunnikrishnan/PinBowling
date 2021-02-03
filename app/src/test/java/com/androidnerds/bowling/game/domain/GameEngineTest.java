@@ -1,26 +1,24 @@
 package com.androidnerds.bowling.game.domain;
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
+
 import com.androidnerds.bowling.game.domain.exception.GameNotInitializedException;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestRule;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import static org.junit.Assert.*;
 
+@RunWith(JUnit4.class)
 public class GameEngineTest {
 
-    @Before
-    public void setUp() throws Exception {
-    }
-
-    @After
-    public void tearDown() throws Exception {
-    }
-
-    @Test
-    public void init() {
-    }
+    @Rule
+    public TestRule rule = new InstantTaskExecutorRule();
 
     @Test
     public void rollGameWithNoBonus() throws GameNotInitializedException {

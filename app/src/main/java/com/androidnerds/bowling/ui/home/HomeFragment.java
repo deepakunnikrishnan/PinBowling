@@ -20,7 +20,6 @@ import com.androidnerds.bowling.databinding.HomeFragmentBinding;
 
 public class HomeFragment extends Fragment {
 
-    private HomeViewModel mViewModel;
     private HomeFragmentBinding binding;
 
     public static HomeFragment newInstance() {
@@ -38,7 +37,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+        HomeViewModel mViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         this.binding.setLifecycleOwner(getViewLifecycleOwner());
         this.binding.setViewModel(mViewModel);
         observeViewModel(mViewModel);
@@ -46,7 +45,7 @@ public class HomeFragment extends Fragment {
 
     private void observeViewModel(HomeViewModel mViewModel) {
         mViewModel.gameCompletionStatusLiveData.observe(getViewLifecycleOwner(), status -> onGameCompleted());
-        mViewModel.messagesLiveData.observe(getViewLifecycleOwner(), message -> onMessageReceived(message));
+        mViewModel.messagesLiveData.observe(getViewLifecycleOwner(), this::onMessageReceived);
     }
 
     /**
@@ -54,7 +53,7 @@ public class HomeFragment extends Fragment {
      * @param message
      */
     private void onMessageReceived(String message) {
-
+        Toast.makeText(getActivity(), message,Toast.LENGTH_SHORT).show();
     }
 
     private void onGameCompleted() {

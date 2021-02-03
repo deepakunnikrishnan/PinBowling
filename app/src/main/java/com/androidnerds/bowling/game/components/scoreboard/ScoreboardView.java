@@ -14,7 +14,7 @@ import com.androidnerds.bowling.game.domain.model.Scoreboard;
 
 public class ScoreboardView extends RecyclerView implements GameEngine.OnScoreChangeListener {
 
-    private Context context;
+    private final Context context;
     private ScoreboardAdapter scoreboardAdapter;
 
     public ScoreboardView(@NonNull Context context) {

@@ -14,14 +14,6 @@ import static org.junit.Assert.*;
 
 public class ScoreboardHandlerTest {
 
-    @Before
-    public void setUp() throws Exception {
-    }
-
-    @After
-    public void tearDown() throws Exception {
-    }
-
     @Test
     public void getPossiblePoints() {
         ScoreboardHandler scoreBoardHandler = getScoreBoardHandler();

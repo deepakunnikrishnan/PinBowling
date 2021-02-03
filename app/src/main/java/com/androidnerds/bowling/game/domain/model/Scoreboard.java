@@ -7,8 +7,8 @@ import java.util.List;
 
 public class Scoreboard {
 
-    private Player player;
-    private List<Frame> frames;
+    private final Player player;
+    private final List<Frame> frames;
 
     public Scoreboard(@NonNull Player player, int maxFrames) {
         this.player = player;

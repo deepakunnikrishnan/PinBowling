@@ -5,15 +5,13 @@ import org.junit.Test;
 import pl.pojo.tester.api.assertion.Assertions;
 import pl.pojo.tester.api.assertion.Method;
 
-public class ScoreBoardTest {
+public class PlayerTest {
 
     @Test
-    public void testScoreboardShouldPassAll() {
-        final Class<?> classUnderTest = Scoreboard.class;
+    public void testPlayerShouldPassAll() {
+        final Class<?> classUnderTest = Player.class;
         Assertions.assertPojoMethodsFor(classUnderTest)
-                .testing(Method.GETTER, Method.CONSTRUCTOR)
+                .testing(Method.GETTER, Method.SETTER, Method.CONSTRUCTOR)
                 .areWellImplemented();
     }
-
-
 }

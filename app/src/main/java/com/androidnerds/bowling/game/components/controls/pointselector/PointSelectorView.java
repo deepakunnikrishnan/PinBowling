@@ -70,7 +70,7 @@ public class PointSelectorView extends ConstraintLayout {
 
     class PointSelectorAdapter extends RecyclerView.Adapter<PointViewHolder> {
 
-        private List<Integer> points = new ArrayList<>();
+        private final List<Integer> points = new ArrayList<>();
 
         PointSelectorAdapter(List<Integer> points) {
             this.points.clear();

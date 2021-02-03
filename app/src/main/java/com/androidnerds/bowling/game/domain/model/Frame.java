@@ -2,6 +2,8 @@ package com.androidnerds.bowling.game.domain.model;
 
 import androidx.annotation.NonNull;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -38,7 +40,7 @@ public class Frame {
         this.frameNumber = frameNumber;
     }
 
-    public void setRolls(List<Integer> rolls) {
+    public void setRolls(@NotNull List<Integer> rolls) {
         this.rolls = rolls;
     }
 
@@ -58,11 +60,12 @@ public class Frame {
         this.bonusRolls = bonusRolls;
     }
 
+    @NotNull
     public FrameStatus getFrameStatus() {
         return frameStatus;
     }
 
-    public void setFrameStatus(FrameStatus frameStatus) {
+    public void setFrameStatus(@NotNull FrameStatus frameStatus) {
         this.frameStatus = frameStatus;
     }
 
@@ -82,6 +85,7 @@ public class Frame {
         this.totalScore = totalScore;
     }
 
+    @NotNull
     public List<Integer> getRolls() {
         return rolls;
     }
@@ -112,5 +116,20 @@ public class Frame {
     @Override
     public int hashCode() {
         return Objects.hash(getFrameStatus(), getRolls(), getFrameNumber(), getBonusRolls(), getTotalScore(), getBonusScore(), getCumulativeScore(), isLastFrame());
+    }
+
+    @NotNull
+    @Override
+    public String toString() {
+        return "Frame{" +
+                "frameStatus=" + frameStatus +
+                ", rolls=" + rolls +
+                ", frameNumber=" + frameNumber +
+                ", bonusRolls=" + bonusRolls +
+                ", totalScore=" + totalScore +
+                ", bonusScore=" + bonusScore +
+                ", cumulativeScore=" + cumulativeScore +
+                ", isLastFrame=" + isLastFrame +
+                '}';
     }
 }
