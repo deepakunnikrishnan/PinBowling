@@ -13,15 +13,17 @@ import java.util.List;
 
 public class FrameViewHolder extends RecyclerView.ViewHolder {
 
-    private TextView textViewFrameNumber;
-    private TextView textViewFirstRoll;
-    private TextView textViewSecondRoll;
-    private TextView textViewThirdRoll;
-    private TextView textViewCumulativeScore;
+    private final View itemView;
+    private final TextView textViewFrameNumber;
+    private final TextView textViewFirstRoll;
+    private final TextView textViewSecondRoll;
+    private final TextView textViewThirdRoll;
+    private final TextView textViewCumulativeScore;
 
 
     public FrameViewHolder(@NonNull View itemView) {
         super(itemView);
+        this.itemView = itemView;
         textViewFrameNumber = itemView.findViewById(R.id.textViewFrameNumber);
         textViewFirstRoll = itemView.findViewById(R.id.textViewFirstRoll);
         textViewSecondRoll = itemView.findViewById(R.id.textViewSecondRoll);
@@ -38,8 +40,9 @@ public class FrameViewHolder extends RecyclerView.ViewHolder {
             textViewThirdRoll.setVisibility(View.GONE);
         }
         if (frame.getFrameStatus() == Frame.FrameStatus.EMPTY) {
-            resetFrame();
+            resetFrame(frame);
         } else {
+            setBackgroundColor(frame);
             if (!rolls.isEmpty()) {
                 setPoints(frame, rolls);
             }
@@ -47,6 +50,10 @@ public class FrameViewHolder extends RecyclerView.ViewHolder {
                 textViewCumulativeScore.setText(String.valueOf(frame.getCumulativeScore()));
             }
         }
+    }
+
+    private void setBackgroundColor(Frame frame) {
+        itemView.setBackgroundColor(itemView.getContext().getColor(R.color.white));
     }
 
     private void setPoints(Frame frame, List<Integer> roll) {
@@ -60,11 +67,12 @@ public class FrameViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    private void resetFrame() {
+    private void resetFrame(Frame frame) {
         textViewFirstRoll.setText("");
         textViewSecondRoll.setText("");
         textViewThirdRoll.setText("");
         textViewCumulativeScore.setText("");
+        setBackgroundColor(frame);
     }
 
     private String getStringValueForRoll(int roll) {

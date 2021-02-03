@@ -18,14 +18,7 @@ import java.util.List;
 
 class ScoreboardAdapter extends RecyclerView.Adapter<FrameViewHolder> {
 
-    private Scoreboard scoreboard;
-
-    private List<Frame> frameList = new ArrayList<>();
-
-    ScoreboardAdapter(@NonNull Scoreboard scoreboard) {
-        this.scoreboard = scoreboard;
-        this.frameList.addAll(this.scoreboard.getFrames());
-    }
+    private final List<Frame> frameList = new ArrayList<>();
 
     @NonNull
     @Override
@@ -40,20 +33,10 @@ class ScoreboardAdapter extends RecyclerView.Adapter<FrameViewHolder> {
 
     @Override
     public int getItemCount() {
-        return null != frameList ? frameList.size() : 0;
-    }
-
-    public Scoreboard getScoreboard() {
-        return scoreboard;
+        return frameList.size();
     }
 
     public void updateScoreboard(Scoreboard newScoreboard) {
-
-        /*List<Frame> newFramesList = newScoreboard.getFrames();
-        DiffUtil.DiffResult result = DiffUtil.calculateDiff(new ScoreboardDiffUtil(frameList, newFramesList));
-        frameList.clear();
-        frameList.addAll(newFramesList);
-        result.dispatchUpdatesTo(this);*/
         frameList.clear();
         frameList.addAll(newScoreboard.getFrames());
         notifyDataSetChanged();

@@ -1,6 +1,7 @@
 package com.androidnerds.bowling.game.components.scoreboard;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.util.AttributeSet;
 
 import androidx.annotation.NonNull;
@@ -14,7 +15,6 @@ import com.androidnerds.bowling.game.domain.model.Scoreboard;
 public class ScoreboardView extends RecyclerView implements GameEngine.OnScoreChangeListener {
 
     private Context context;
-    private GameEngine gameEngine;
     private ScoreboardAdapter scoreboardAdapter;
 
     public ScoreboardView(@NonNull Context context) {
@@ -24,28 +24,26 @@ public class ScoreboardView extends RecyclerView implements GameEngine.OnScoreCh
     public ScoreboardView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
+        initWithScoreboard();
     }
 
     private void init(@NonNull ScoreboardAdapter scoreboardAdapter) {
-        this.setLayoutManager(new GridLayoutManager(this.context, GameEngine.MAX_FRAMES));
+        if(context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            this.setLayoutManager(new GridLayoutManager(this.context, GameEngine.MAX_FRAMES/2));
+        }else {
+            this.setLayoutManager(new GridLayoutManager(this.context, GameEngine.MAX_FRAMES));
+        }
         setAdapter(scoreboardAdapter);
     }
 
-    public void setupGameEngine(@NonNull GameEngine gameEngine) {
-        this.gameEngine = gameEngine;
-        initWithScoreboard(this.gameEngine);
-    }
-
-    private void initWithScoreboard(@NonNull GameEngine gameEngine) {
-        gameEngine.setScoreChangeListener(this);
-        scoreboardAdapter = new ScoreboardAdapter(gameEngine.getScoreboard());
+    private void initWithScoreboard() {
+        scoreboardAdapter = new ScoreboardAdapter();
         init(scoreboardAdapter);
     }
 
     private void updateScoreboard(ScoreboardAdapter adapter, Scoreboard scoreboard) {
         adapter.updateScoreboard(scoreboard);
     }
-
 
     @Override
     public void onScoreboardUpdated(Scoreboard scoreboard) {

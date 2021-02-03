@@ -12,14 +12,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.Toast;
 
 import com.androidnerds.bowling.R;
 import com.androidnerds.bowling.game.components.controls.pointselector.PointSelectorView;
 import com.androidnerds.bowling.game.components.scoreboard.ScoreboardView;
-import com.androidnerds.bowling.game.domain.GameEngine;
-
-import java.util.List;
 
 
 public class HomeFragment extends Fragment implements View.OnClickListener {
@@ -28,7 +25,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private Button buttonReset;
     private ScoreboardView scoreboardView;
     private PointSelectorView pointSelectorView;
-    private GameEngine gameEngine;
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -50,21 +46,28 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+        observeViewModel(mViewModel);
         this.pointSelectorView.setOnPointSelectedChangeListener(this::onInputEntered);
-        gameEngine = GameEngine.getInstance();
-        gameEngine.setValuesChangeListener(points -> pointSelectorView.showPoints(points));
-        gameEngine.init();
-        this.scoreboardView.setupGameEngine(gameEngine);
+    }
+
+    private void observeViewModel(HomeViewModel mViewModel) {
+        mViewModel.scoreboardMutableLiveData.observe(getViewLifecycleOwner(), scoreboard -> scoreboardView.onScoreboardUpdated(scoreboard));
+        mViewModel.possibleValues.observe(getViewLifecycleOwner(), integers -> pointSelectorView.showPoints(integers));
+        mViewModel.gameCompletionStatusLiveData.observe(getViewLifecycleOwner(), status -> onGameCompleted());
     }
 
     private void onInputEntered(int points) {
-        this.gameEngine.roll(points);
+        mViewModel.onPointSelected(points);
+    }
+
+    private void onGameCompleted() {
+        Toast.makeText(getActivity(), "Game over",Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onClick(View v) {
         if(v.getId() == R.id.buttonReset) {
-            gameEngine.init();
+            mViewModel.onResetClicked();
         }
 
     }

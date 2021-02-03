@@ -104,6 +104,111 @@ public class ScoreboardHandlerTest {
         assertEquals(1, possiblePoints.get(possiblePoints.size() - 1).intValue());
     }
 
+    @Test
+    public void isGameOverForStrikeAtLastFrameShouldReturnFalse() {
+        ScoreboardHandler scoreBoardHandler = getScoreBoardHandler();
+        int[] inputs = {
+                5, 2,//Frame 1
+                8, 1,//Frame 2
+                7, 3,//Frame 3
+                6, 3,//Frame 4
+                6, 3,//Frame 5
+                6, 3,//Frame 6
+                6, 3,//Frame 7
+                6, 3,//Frame 8
+                6, 3,//Frame 9
+                10//Frame 10
+        };
+        for (int point : inputs) {
+            scoreBoardHandler.updateScore(point);
+        }
+        assertFalse(scoreBoardHandler.isGameOver());
+    }
+
+    @Test
+    public void isGameOverForStrikeAtLastTwoRollsShouldReturnFalse() {
+        ScoreboardHandler scoreBoardHandler = getScoreBoardHandler();
+        int[] inputs = {
+                5, 2,//Frame 1
+                8, 1,//Frame 2
+                7, 3,//Frame 3
+                6, 3,//Frame 4
+                6, 3,//Frame 5
+                6, 3,//Frame 6
+                6, 3,//Frame 7
+                6, 3,//Frame 8
+                6, 3,//Frame 9
+                10,10//Frame 10
+        };
+        for (int point : inputs) {
+            scoreBoardHandler.updateScore(point);
+        }
+        assertFalse(scoreBoardHandler.isGameOver());
+    }
+
+    @Test
+    public void isGameOverForThreeStrikeAtLastFrameShouldReturnTrue() {
+        ScoreboardHandler scoreBoardHandler = getScoreBoardHandler();
+        int[] inputs = {
+                5, 2,//Frame 1
+                8, 1,//Frame 2
+                7, 3,//Frame 3
+                6, 3,//Frame 4
+                6, 3,//Frame 5
+                6, 3,//Frame 6
+                6, 3,//Frame 7
+                6, 3,//Frame 8
+                6, 3,//Frame 9
+                10,10,10//Frame 10
+        };
+        for (int point : inputs) {
+            scoreBoardHandler.updateScore(point);
+        }
+        assertTrue(scoreBoardHandler.isGameOver());
+    }
+
+    @Test
+    public void isGameOverShouldReturnTrue() {
+        ScoreboardHandler scoreBoardHandler = getScoreBoardHandler();
+        int[] inputs = {
+                5, 2,//Frame 1
+                8, 1,//Frame 2
+                7, 3,//Frame 3
+                6, 3,//Frame 4
+                6, 3,//Frame 5
+                6, 3,//Frame 6
+                6, 3,//Frame 7
+                6, 3,//Frame 8
+                6, 3,//Frame 9
+                9,0//Frame 10
+        };
+        for (int point : inputs) {
+            scoreBoardHandler.updateScore(point);
+        }
+        assertTrue(scoreBoardHandler.isGameOver());
+    }
+
+    @Test
+    public void isGameOverShouldReturnFalse() {
+        ScoreboardHandler scoreBoardHandler = getScoreBoardHandler();
+        int[] inputs = {
+                5, 2,//Frame 1
+                8, 1,//Frame 2
+                7, 3,//Frame 3
+                6, 3,//Frame 4
+                6, 3,//Frame 5
+                6, 3,//Frame 6
+                6, 3,//Frame 7
+                6, 3,//Frame 8
+                6, 3,//Frame 9
+                9//Frame 10
+        };
+        for (int point : inputs) {
+            scoreBoardHandler.updateScore(point);
+        }
+        assertFalse(scoreBoardHandler.isGameOver());
+    }
+
     private ScoreboardHandler getScoreBoardHandler() {
         Player player = new Player("test");
         Scoreboard scoreBoard = new Scoreboard(player, GameConstants.MAX_FRAMES);

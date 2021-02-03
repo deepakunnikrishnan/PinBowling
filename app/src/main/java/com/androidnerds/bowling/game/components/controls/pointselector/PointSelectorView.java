@@ -1,6 +1,7 @@
 package com.androidnerds.bowling.game.components.controls.pointselector;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -39,12 +41,19 @@ public class PointSelectorView extends ConstraintLayout {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.content_point_selector, this, true);
+        initPointsListView(context, view);
+    }
+
+    private void initPointsListView(Context context, View view) {
         RecyclerView recyclerViewPointsList = view.findViewById(R.id.recyclerViewPointsList);
-        recyclerViewPointsList.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+        if(context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            recyclerViewPointsList.setLayoutManager(new GridLayoutManager(context, 6));
+        } else {
+            recyclerViewPointsList.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+        }
         recyclerViewPointsList.addItemDecoration(new DefaultItemDecorator(context.getResources().getDimensionPixelSize(R.dimen.default_spacing)));
         this.pointSelectorAdapter = new PointSelectorAdapter(points);
         recyclerViewPointsList.setAdapter(this.pointSelectorAdapter);
-
     }
 
     public void setOnPointSelectedChangeListener(OnPointSelectedChangeListener listener) {

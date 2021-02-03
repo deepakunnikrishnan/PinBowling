@@ -25,6 +25,10 @@ public class GameEngine {
         void onPossibleValuesChanged(List<Integer> points);
     }
 
+    public interface OnGameCompletionListener {
+        void onGameCompleted();
+    }
+
     public static final String TAG = "GameEngine";
     public static final int MAX_FRAMES = GameConstants.MAX_FRAMES;
 
@@ -32,6 +36,7 @@ public class GameEngine {
 
     private OnScoreChangeListener scoreChangeListener;
     private OnPossibleValuesChangeListener valuesChangeListener;
+    private OnGameCompletionListener gameCompletionListener;
 
     private Scoreboard scoreboard;
     private ScoreboardHandler scoreBoardHandler;
@@ -40,7 +45,7 @@ public class GameEngine {
     private List<Integer> pins;
 
     public static GameEngine getInstance() {
-        if(null == gameEngine) {
+        if (null == gameEngine) {
             gameEngine = new GameEngine();
         }
         return gameEngine;
@@ -70,19 +75,25 @@ public class GameEngine {
     public boolean roll(int points) {
         Log.i(TAG, "roll(" + points + ")");
         boolean updated = this.scoreBoardHandler.updateScore(points);
-        if(updated) {
+        if (updated) {
             sendScoreChangeListenerCallback();
-        }else {
+        } else {
             Log.i(TAG, "roll(" + points + ")" + " Invalid points");
+        }
+        if (this.scoreBoardHandler.isGameOver()) {
+            gameStatus = GameStatus.GAME_OVER;
+            if (null != gameCompletionListener) {
+                gameCompletionListener.onGameCompleted();
+            }
         }
         return updated;
     }
 
     private void sendScoreChangeListenerCallback() {
-        if(null != scoreChangeListener) {
+        if (null != scoreChangeListener) {
             scoreChangeListener.onScoreboardUpdated(this.scoreboard);
         }
-        if(null != valuesChangeListener) {
+        if (null != valuesChangeListener) {
             valuesChangeListener.onPossibleValuesChanged(this.scoreBoardHandler.getPossiblePoints());
         }
     }
@@ -93,5 +104,9 @@ public class GameEngine {
 
     public void setValuesChangeListener(OnPossibleValuesChangeListener valuesChangeListener) {
         this.valuesChangeListener = valuesChangeListener;
+    }
+
+    public void setGameCompletionListener(OnGameCompletionListener gameCompletionListener) {
+        this.gameCompletionListener = gameCompletionListener;
     }
 }

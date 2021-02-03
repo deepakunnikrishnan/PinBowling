@@ -32,8 +32,4 @@ public final class GameUtils {
     public static boolean isNextFrame(int roll) {
         return roll % 2 != 0;
     }
-
-    public static boolean isFirstRollInFrame(int roll) {
-        return roll % 2 == 0;
-    }
 }
