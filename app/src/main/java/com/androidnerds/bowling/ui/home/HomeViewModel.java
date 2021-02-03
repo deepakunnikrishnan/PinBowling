@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.androidnerds.bowling.game.domain.GameEngine;
+import com.androidnerds.bowling.game.domain.exception.GameNotInitializedException;
 import com.androidnerds.bowling.game.domain.model.Scoreboard;
 
 import java.util.List;
@@ -15,16 +16,17 @@ public class HomeViewModel extends ViewModel implements GameEngine.OnPossibleVal
 
     GameEngine gameEngine;
 
-    private final MutableLiveData<List<Integer>> _possibleValue = new MutableLiveData<>();
-    public final LiveData<List<Integer>> possibleValues = _possibleValue;
+    private final MutableLiveData<List<Integer>> _possibleValues = new MutableLiveData<>();
+    public final LiveData<List<Integer>> possibleValues = _possibleValues;
 
     private final MutableLiveData<Scoreboard> _scoreboardLiveData = new MutableLiveData<>();
-    public final LiveData<Scoreboard> scoreboardMutableLiveData = _scoreboardLiveData;
+    public final LiveData<Scoreboard> scoreboard = _scoreboardLiveData;
 
     private final MutableLiveData<Boolean> _gameCompletionStatusLiveData = new MutableLiveData<>();
     public final LiveData<Boolean> gameCompletionStatusLiveData = _gameCompletionStatusLiveData;
 
-
+    private final MutableLiveData<String> _messagesLiveData = new MutableLiveData<>();
+    public final LiveData<String> messagesLiveData = _messagesLiveData;
 
 
     public HomeViewModel() {
@@ -37,7 +39,7 @@ public class HomeViewModel extends ViewModel implements GameEngine.OnPossibleVal
 
     @Override
     public void onPossibleValuesChanged(List<Integer> points) {
-        _possibleValue.postValue(points);
+        _possibleValues.postValue(points);
     }
 
     @Override
@@ -46,7 +48,12 @@ public class HomeViewModel extends ViewModel implements GameEngine.OnPossibleVal
     }
 
     public void onPointSelected(int points) {
-        gameEngine.roll(points);
+        try {
+            gameEngine.roll(points);
+        } catch (GameNotInitializedException e) {
+            e.printStackTrace();
+            _messagesLiveData.postValue("Failed to start the game.");
+        }
     }
 
     public void onResetClicked() {

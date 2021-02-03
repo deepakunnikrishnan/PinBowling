@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.androidnerds.bowling.R;
 import com.androidnerds.bowling.game.domain.model.Frame;
+import com.androidnerds.bowling.game.domain.utils.GameUtils;
 
 import java.util.List;
 
@@ -76,9 +77,9 @@ public class FrameViewHolder extends RecyclerView.ViewHolder {
     }
 
     private String getStringValueForRoll(int roll) {
-        if (roll == 0) {
+        if (GameUtils.isGutter(roll)) {
             return "-";
-        } else if (roll == 10) {
+        } else if (GameUtils.isStrike(roll)) {
             return "X";
         } else {
             return String.valueOf(roll);

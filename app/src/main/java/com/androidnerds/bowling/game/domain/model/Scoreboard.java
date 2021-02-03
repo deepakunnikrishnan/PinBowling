@@ -14,6 +14,7 @@ public class Scoreboard {
         this.player = player;
         this.frames = new ArrayList<>();
         for (int i = 0; i < maxFrames; i++) {
+
             this.frames.add(new Frame(i+1, (i+1) == maxFrames));
         }
     }

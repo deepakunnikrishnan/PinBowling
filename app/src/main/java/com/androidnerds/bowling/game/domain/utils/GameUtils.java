@@ -19,6 +19,10 @@ public final class GameUtils {
                 currentPoints + previousPoints <= GameConstants.MAX_POINTS_FOR_ROLL;
     }
 
+    public static boolean isGutter(int points) {
+        return points == 0;
+    }
+
     public static boolean isStrike(int points) {
         return points == GameConstants.MAX_POINTS_FOR_ROLL;
     }

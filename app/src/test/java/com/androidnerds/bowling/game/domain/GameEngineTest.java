@@ -1,5 +1,7 @@
 package com.androidnerds.bowling.game.domain;
 
+import com.androidnerds.bowling.game.domain.exception.GameNotInitializedException;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +23,7 @@ public class GameEngineTest {
     }
 
     @Test
-    public void rollGameWithNoBonus() {
+    public void rollGameWithNoBonus() throws GameNotInitializedException {
         GameEngine gameEngine = GameEngine.getInstance();
         gameEngine.init();
 
@@ -46,7 +48,7 @@ public class GameEngineTest {
     }
 
     @Test
-    public void rollGutter() {
+    public void rollGutter() throws GameNotInitializedException {
         GameEngine gameEngine = GameEngine.getInstance();
         gameEngine.init();
 
@@ -71,7 +73,7 @@ public class GameEngineTest {
     }
 
     @Test
-    public void rollPerfectTen() {
+    public void rollPerfectTen() throws GameNotInitializedException {
         GameEngine gameEngine = GameEngine.getInstance();
         gameEngine.init();
 
@@ -98,7 +100,7 @@ public class GameEngineTest {
     }
 
     @Test
-    public void rollGameWithStrikeOnLastFrameAndStrikeOnBonus1() {
+    public void rollGameWithStrikeOnLastFrameAndStrikeOnBonus1() throws GameNotInitializedException {
         GameEngine gameEngine = GameEngine.getInstance();
         gameEngine.init();
 
@@ -125,7 +127,7 @@ public class GameEngineTest {
     }
 
     @Test
-    public void rollGameWithStrikeOnLastFrameAndSpareOnBonus() {
+    public void rollGameWithStrikeOnLastFrameAndSpareOnBonus() throws GameNotInitializedException {
         GameEngine gameEngine = GameEngine.getInstance();
         gameEngine.init();
 
@@ -151,7 +153,7 @@ public class GameEngineTest {
     }
 
     @Test
-    public void rollGameWithSpareOnLastFrameAndStrikeOnBonus() {
+    public void rollGameWithSpareOnLastFrameAndStrikeOnBonus() throws GameNotInitializedException {
         GameEngine gameEngine = GameEngine.getInstance();
         gameEngine.init();
 
@@ -177,7 +179,7 @@ public class GameEngineTest {
     }
 
     @Test
-    public void rollGameWithSpareOnLastFrame() {
+    public void rollGameWithSpareOnLastFrame() throws GameNotInitializedException {
         GameEngine gameEngine = GameEngine.getInstance();
         gameEngine.init();
 
@@ -202,7 +204,7 @@ public class GameEngineTest {
         }
     }
 
-    private boolean[] executeGame(GameEngine gameEngine, int[] inputs) {
+    private boolean[] executeGame(GameEngine gameEngine, int[] inputs) throws GameNotInitializedException {
         boolean[] results = new boolean[inputs.length];
         int index = 0;
         for (int roll : inputs) {
@@ -212,7 +214,7 @@ public class GameEngineTest {
     }
 
     @Test
-    public void rollGameWithInvalidPoints() {
+    public void rollGameWithInvalidPoints() throws GameNotInitializedException {
         GameEngine gameEngine = GameEngine.getInstance();
         gameEngine.init();
 
@@ -224,7 +226,7 @@ public class GameEngineTest {
     }
 
     @Test
-    public void rollGameWithInvalidSecondRollsForFrame() {
+    public void rollGameWithInvalidSecondRollsForFrame() throws GameNotInitializedException {
         GameEngine gameEngine = GameEngine.getInstance();
         gameEngine.init();
 

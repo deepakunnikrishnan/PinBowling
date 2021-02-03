@@ -64,4 +64,16 @@ public class GameUtilsTest {
         assertFalse(GameUtils.isSpare(10,-1));
     }
 
+    @Test
+    public void testIsGutterForValidValueShouldReturnTrue() {
+        assertTrue(GameUtils.isGutter(0));
+    }
+
+    @Test
+    public void testIsGutterForInValidValueShouldReturnFalse() {
+        assertFalse(GameUtils.isGutter(-1));
+        assertFalse(GameUtils.isGutter(1));
+        assertFalse(GameUtils.isGutter(10));
+    }
+
 }

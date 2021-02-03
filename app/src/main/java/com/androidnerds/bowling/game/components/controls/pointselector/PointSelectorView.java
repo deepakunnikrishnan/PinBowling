@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.databinding.BindingMethod;
+import androidx.databinding.BindingMethods;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,6 +20,7 @@ import com.androidnerds.bowling.R;
 import java.util.ArrayList;
 import java.util.List;
 
+@BindingMethods(@BindingMethod(type = PointSelectorView.class, attribute = "app:onPointSelected", method = "setOnPointSelectedChangeListener"))
 public class PointSelectorView extends ConstraintLayout {
 
     public interface OnPointSelectedChangeListener {
@@ -60,7 +63,7 @@ public class PointSelectorView extends ConstraintLayout {
         this.listener = listener;
     }
 
-    public void showPoints(List<Integer> points) {
+    public void showPoints(@NonNull List<Integer> points) {
         this.points = points;
         this.pointSelectorAdapter.setData(this.points);
     }

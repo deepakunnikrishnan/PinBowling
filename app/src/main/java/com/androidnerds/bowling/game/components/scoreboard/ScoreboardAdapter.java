@@ -4,16 +4,13 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.androidnerds.bowling.R;
-import com.androidnerds.bowling.game.components.scoreboard.diffutil.ScoreboardDiffUtil;
 import com.androidnerds.bowling.game.domain.model.Frame;
 import com.androidnerds.bowling.game.domain.model.Scoreboard;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 class ScoreboardAdapter extends RecyclerView.Adapter<FrameViewHolder> {

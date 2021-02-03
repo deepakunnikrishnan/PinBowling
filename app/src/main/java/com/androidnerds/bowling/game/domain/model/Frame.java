@@ -96,7 +96,7 @@ public class Frame {
 
     @Override
     public boolean equals(Object o) {
-        //if (this == o) return true;
+        if (this == o) return true;
         if (!(o instanceof Frame)) return false;
         Frame frame = (Frame) o;
         return getFrameNumber() == frame.getFrameNumber() &&
