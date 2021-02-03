@@ -6,6 +6,10 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+/**
+ * Implementation of the {@link RecyclerView.ItemDecoration} for margin between the items added in the {@link RecyclerView}.
+ * In this case, we are adding a default padding on the sides of the item.
+ */
 public class DefaultItemDecorator extends RecyclerView.ItemDecoration {
 
     private final int spacing;

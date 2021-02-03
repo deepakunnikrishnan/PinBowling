@@ -17,7 +17,21 @@ import android.widget.Toast;
 import com.androidnerds.bowling.R;
 import com.androidnerds.bowling.databinding.HomeFragmentBinding;
 
-
+/**
+ * Fragment class representing the content for the Home screen.
+ * Binds to the {@link HomeViewModel} to update the Home screen.
+ * <p>
+ * The UI mainly contains a {@link com.androidnerds.bowling.game.components.scoreboard.ScoreboardView} &
+ * {@link com.androidnerds.bowling.game.components.controls.pointselector.PointSelectorView}.
+ * </p>
+ *
+ * <p>
+ * HomeFragment class observes to the LiveData exposed by the {@link HomeViewModel#gameCompletionStatusLiveData} &
+ * {@link HomeViewModel#messagesLiveData} to display prompts or messages to the user.
+ * </p>
+ *
+ *
+ */
 public class HomeFragment extends Fragment {
 
     private HomeFragmentBinding binding;

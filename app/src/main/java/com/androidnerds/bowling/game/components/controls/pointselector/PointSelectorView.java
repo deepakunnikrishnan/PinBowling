@@ -8,20 +8,41 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.databinding.BindingMethod;
 import androidx.databinding.BindingMethods;
+import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.androidnerds.bowling.R;
+import com.androidnerds.bowling.databinding.ContentPointSelectorBinding;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * <p>
+ * A CompoundView to display list of possible points. The user has the option to select an item from the list.
+ * This class is an extension of the {@link CardView} and contains:
+ *  1. A Label - {@link android.widget.TextView}
+ *  2. A {@link RecyclerView} for displaying the points.
+ *  </p>
+ *  <p>
+ *  The layout is inflated to this ViewGroup. Based on the orientation configuration of the screen,
+ *  the view adjust itself to display the buttons for the points in the screen.
+ *  If the user is in the {@link Configuration#ORIENTATION_PORTRAIT}, then displays the points as a Grid with 6 columns.
+ *  If the user is in the {@link Configuration#ORIENTATION_LANDSCAPE}, then displays the points as a horizontal list.
+ *  </p>
+ *
+ *  <p>
+ *  When the user selects an point from the selector, the class sends the selected point via {@link OnPointSelectedChangeListener#onPointSelected(int)}.
+ *  </p>
+ */
 @BindingMethods(@BindingMethod(type = PointSelectorView.class, attribute = "app:onPointSelected", method = "setOnPointSelectedChangeListener"))
-public class PointSelectorView extends ConstraintLayout {
+public class PointSelectorView extends CardView {
 
     public interface OnPointSelectedChangeListener {
         void onPointSelected(int points);
@@ -43,20 +64,41 @@ public class PointSelectorView extends ConstraintLayout {
     private void init(Context context) {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.content_point_selector, this, true);
-        initPointsListView(context, view);
+        ContentPointSelectorBinding binding = DataBindingUtil.inflate(inflater, R.layout.content_point_selector,this, true);
+        initPointsListView(context, binding);
     }
 
-    private void initPointsListView(Context context, View view) {
-        RecyclerView recyclerViewPointsList = view.findViewById(R.id.recyclerViewPointsList);
+    /**
+     * Initializes the view.
+     * @param context
+     * @param binding
+     */
+    private void initPointsListView(Context context, ContentPointSelectorBinding binding) {
+        setCardViewStyles(context);
+        setupPointsList(context, binding);
+    }
+
+    private void setCardViewStyles(Context context) {
+        setRadius(context.getResources().getDimension(R.dimen.card_radius));
+        setCardElevation(context.getResources().getDimension(R.dimen.card_elevation));
+        int padding = (int) context.getResources().getDimension(R.dimen.default_padding);
+        setContentPadding(padding,padding,padding,padding);
+    }
+
+    /**
+     * Sets the layoutManager for the recylerview based on the orientation.
+     * @param context
+     * @param binding
+     */
+    private void setupPointsList(Context context, com.androidnerds.bowling.databinding.ContentPointSelectorBinding binding) {
         if(context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            recyclerViewPointsList.setLayoutManager(new GridLayoutManager(context, 6));
+            binding.recyclerViewPointsList.setLayoutManager(new GridLayoutManager(context, 6));
         } else {
-            recyclerViewPointsList.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+            binding.recyclerViewPointsList.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
         }
-        recyclerViewPointsList.addItemDecoration(new DefaultItemDecorator(context.getResources().getDimensionPixelSize(R.dimen.default_spacing)));
+        binding.recyclerViewPointsList.addItemDecoration(new DefaultItemDecorator(context.getResources().getDimensionPixelSize(R.dimen.default_spacing)));
         this.pointSelectorAdapter = new PointSelectorAdapter(points);
-        recyclerViewPointsList.setAdapter(this.pointSelectorAdapter);
+        binding.recyclerViewPointsList.setAdapter(this.pointSelectorAdapter);
     }
 
     public void setOnPointSelectedChangeListener(OnPointSelectedChangeListener listener) {

@@ -9,6 +9,11 @@ import com.androidnerds.bowling.R;
 import com.androidnerds.bowling.databinding.HomeActivityBinding;
 
 
+/**
+ * The LauncherActivity for the applications.
+ * Created as the container for the Home screen.
+ * Adds the {@link HomeFragment} which forms the content for the screen.
+ */
 public class HomeActivity extends AppCompatActivity {
 
     @Override

@@ -3,6 +3,7 @@ package com.androidnerds.bowling.game.components.controls.pointselector;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.ViewGroup;
 
@@ -11,6 +12,10 @@ import androidx.core.content.ContextCompat;
 
 import com.androidnerds.bowling.R;
 
+/**
+ * A custom button component extending {@link AppCompatButton} representing a Point that can
+ * be selected in the {@link PointSelectorView}.
+ */
 public class PointButton extends AppCompatButton {
 
     public PointButton(Context context) {
@@ -29,13 +34,19 @@ public class PointButton extends AppCompatButton {
     private void init(Context context) {
         setSingleLine(true);
         setMaxLines(1);
-        setElevation(2);
+        setElevation(5);
         setGravity(Gravity.CENTER);
         setPadding(context.getResources().getDimensionPixelSize(R.dimen.default_spacing),
                 context.getResources().getDimensionPixelSize(R.dimen.default_spacing),
                 context.getResources().getDimensionPixelSize(R.dimen.default_spacing),
                 context.getResources().getDimensionPixelSize(R.dimen.default_spacing));
         setBackground(ContextCompat.getDrawable(context, R.drawable.background_point_border));
+        //setForeground();
+        //setBackground(ContextCompat.getDrawable(context, android.R.drawable.s));
+        //TypedValue outValue = new TypedValue();
+        //getContext().getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
+        //setBackgroundResource(outValue.resourceId);
+        //android:foreground="?android:attr/selectableItemBackground"
         setTextColor(ContextCompat.getColor(getContext(), R.color.purple_700));
         setLayoutParams(new ViewGroup.LayoutParams(context.getResources().getDimensionPixelSize(R.dimen.default_point_button_width), context.getResources().getDimensionPixelSize(R.dimen.default_point_button_width)));
     }

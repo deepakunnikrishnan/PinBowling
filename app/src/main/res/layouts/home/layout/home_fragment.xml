@@ -15,26 +15,26 @@
         android:layout_height="match_parent"
         tools:context=".ui.home.HomeActivity">
 
-        <com.androidnerds.bowling.game.components.scoreboard.ScoreboardView
-            android:id="@+id/scoreboard"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/default_margin"
-            android:layout_marginEnd="@dimen/default_margin"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:scoreboard="@{viewModel.scoreboard}"/>
-
         <com.androidnerds.bowling.game.components.controls.pointselector.PointSelectorView
             android:id="@+id/pointSelector"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guidelineEnd"
+            app:layout_constraintStart_toStartOf="@+id/guidelineStart"
             app:layout_constraintTop_toBottomOf="@+id/scoreboard"
-            app:possibleValues="@{viewModel.possibleValues}"
-            app:onPointSelected="@{viewModel.onPointSelected}"/>
+            android:layout_marginTop="@dimen/default_margin"
+            android:animateLayoutChanges="true"
+            app:onPointSelected="@{viewModel.onPointSelected}"
+            app:possibleValues="@{viewModel.possibleValues}"/>
+
+        <com.androidnerds.bowling.game.components.scoreboard.ScoreboardView
+            android:id="@+id/scoreboard"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@+id/guidelineEnd"
+            app:layout_constraintStart_toStartOf="@+id/guidelineStart"
+            app:layout_constraintTop_toTopOf="parent"
+            app:scoreboard="@{viewModel.scoreboard}" />
 
 
         <Button
@@ -42,13 +42,31 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/default_margin"
-            android:text="@string/home_reset_label"
             android:onClick="@{()-> viewModel.onResetClicked()}"
+            android:text="@string/home_reset_label"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/pointSelector"
             app:layout_constraintVertical_bias="1.0" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineStart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="@dimen/default_margin"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineEnd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintGuide_end="@dimen/default_margin" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
