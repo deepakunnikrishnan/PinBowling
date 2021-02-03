@@ -98,13 +98,24 @@ public class GameEngine {
         sendScoreChangeListenerCallback();
     }
 
-    public Scoreboard getScoreboard() {
-        return scoreboard;
-    }
-
     /**
      * Method to provide the pins down after rolling the ball.
-     * Validates the input that was passed
+     * <p>
+     *     Validates the current GameStatus.
+     *     If the status is {@link GameStatus#GAME_STARTED}, then proceeds to pass it to the {@link ScoreboardHandler}
+     *     via {@link ScoreboardHandler#updateScore(int)}.
+     *     The {@link ScoreboardHandler} returns whether the point was updated or not.
+     * </p>
+     *
+     * <p>
+     *  {@link GameEngine} sends a callback indicating the scoreboard was updated via {@link OnScoreChangeListener#onScoreboardUpdated(Scoreboard)}
+     * </p>
+     *
+     * <p>
+     *     After each roll, {@link GameEngine} validates whether the game has ended or not.
+     *     If the game has completed, then its updated via {@link OnGameStatusChangedListener#onGameStatusChanged(GameStatus)}
+     * </p>
+     *
      * @param points - no:of pins down
      * @return
      * @throws GameNotInitializedException
@@ -113,12 +124,12 @@ public class GameEngine {
         if(!validateGameStatus()) {
             throw new GameNotInitializedException();
         }
-        Log.i(TAG, "roll(" + points + ")");
+        Log.d(TAG, "roll(" + points + ")");
         boolean updated = this.scoreBoardHandler.updateScore(points);
         if (updated) {
             sendScoreChangeListenerCallback();
         } else {
-            Log.i(TAG, "roll(" + points + ")" + " Invalid points");
+            Log.d(TAG, "roll(" + points + ")" + " Invalid points");
         }
         if (this.scoreBoardHandler.isGameOver()) {
             setGameStatus(GameStatus.GAME_OVER);

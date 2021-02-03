@@ -15,6 +15,11 @@ import java.util.List;
 import static com.androidnerds.bowling.game.domain.GameEngine.TAG;
 import static com.androidnerds.bowling.game.domain.constant.GameConstants.MAX_POINTS_FOR_ROLL;
 
+/**
+ * <p>
+ *     ScoreboardHandler class implements the core business logic related to executing the game.
+ * </p>
+ */
 public class ScoreboardHandler {
 
     private final Scoreboard scoreBoard;
@@ -25,15 +30,28 @@ public class ScoreboardHandler {
         this.scoreBoard = scoreBoard;
     }
 
+    /**
+     * Validates the point passed and then applies the business logic to update the scoreboard.
+     * <p>
+     *     1. Updates the point to the current frame.
+     *     2. Calculates the bonus points for previous frames if required.
+     *     3. Calculates the cumulative points for the frame.
+     *     4. Increments the roll count and frame index.
+     *
+     * </p>
+     * @param points
+     * @return If the point is invalid for the current frame and current roll, then returns false.
+     * else it returns true.
+     */
     public boolean updateScore(int points) {
         if (!isValidPoint(points)) {
             return false;
         }
-        Log.i(TAG, "********* START OF FRAME " + currentFrameIndex + " *********");
-        Log.i(TAG, "updateScore(frameIndex: " + currentFrameIndex + ", roll: " + currentRoll + ", points:" + points + ")");
+        Log.d(TAG, "********* START OF FRAME " + currentFrameIndex + " *********");
+        Log.d(TAG, "updateScore(frameIndex: " + currentFrameIndex + ", roll: " + currentRoll + ", points:" + points + ")");
         Frame frame = this.getFrames().get(currentFrameIndex);
         updatePointsToFrame(frame, points);
-        Log.i(TAG, "totalScore(frameIndex:" + currentFrameIndex + ") = " + frame.getTotalScore());
+        Log.d(TAG, "totalScore(frameIndex:" + currentFrameIndex + ") = " + frame.getTotalScore());
         if (!isLastFrame(currentFrameIndex)) {
             updateBonusRollsForFrame(frame);
         }
@@ -47,6 +65,12 @@ public class ScoreboardHandler {
         return currentFrameIndex >= getFrames().size();
     }
 
+    /**
+     * Adds the points for the roll to the rolls list in the frame.
+     * Adds the same point to the total score for the frame.
+     * @param frame
+     * @param points
+     */
     private void updatePointsToFrame(Frame frame, int points) {
         List<Integer> rolls = frame.getRolls();
         rolls.add(points);
@@ -56,6 +80,11 @@ public class ScoreboardHandler {
         frame.setTotalScore(frame.getTotalScore() + points);
     }
 
+    /**
+     * Based on the game's current status, the roll & frame index are updated.
+     * Applies different logic to based on the currentFrameIndex.
+     * @param frame
+     */
     private void updateRollAndFrameIndices(@NonNull Frame frame) {
         if (isLastFrame(currentFrameIndex)) {
             updateRollAndFrameIndexForLastFrame();
@@ -64,13 +93,21 @@ public class ScoreboardHandler {
         }
     }
 
+    /**
+     * If the current roll is a Strike, then the currentRoll is incremented by 2.
+     * For all other cases, increment the currentRoll by 1.
+     * If the user has reached the end of the frame,
+     *  then the status of the frame is set as {@link com.androidnerds.bowling.game.domain.model.Frame.FrameStatus#COMPLETED}
+     *  and increments the frameIndex by 1.
+     * @param frame
+     */
     private void updateRollAndFrameIndexForOtherFrame(@NonNull Frame frame) {
         //Update roll count
-        if (isRollAStrike(currentFrameIndex)) {
-            Log.i(TAG, "Roll IS A Strike - increment by 2");
+        if (GameUtils.isRollAStrike(frame)) {
+            Log.d(TAG, "Roll IS A Strike - increment by 2");
             currentRoll += 2;
         } else {
-            Log.i(TAG, "Roll NOT A Strike - increment by 1");
+            Log.d(TAG, "Roll NOT A Strike - increment by 1");
             currentRoll++;
         }
         //Update the frame Index
@@ -79,6 +116,10 @@ public class ScoreboardHandler {
         }
     }
 
+    /**
+     * For the Last frame in the board, user can have at most 3 rolls.
+     * Based on the status, the Frame's status is updated.
+     */
     private void updateRollAndFrameIndexForLastFrame() {
         currentRoll++;
         Frame lastFrame = getFrames().get(getFrames().size() - 1);
@@ -90,17 +131,22 @@ public class ScoreboardHandler {
 
     private void setFrameAsCompleted(@NonNull Frame frame) {
         frame.setFrameStatus(Frame.FrameStatus.COMPLETED);
-        Log.i(TAG, "********* END OF FRAME " + (currentFrameIndex + 1) + " *********");
+        Log.d(TAG, "********* END OF FRAME " + (currentFrameIndex + 1) + " *********");
         currentFrameIndex++;
-        Log.i(TAG, "********* START OF FRAME " + (currentFrameIndex + 1) + " *********");
+        Log.d(TAG, "********* START OF FRAME " + (currentFrameIndex + 1) + " *********");
     }
-
+    /**
+     * If the user rolls a Strike or Spare, the user gets bonus rolls.
+     * If its Strike, user receives 2 bonus rolls.
+     * If its Spare, user receives 1 bonus roll.
+     * @param frame
+     */
     private void updateBonusRollsForFrame(Frame frame) {
-        if (isRollAStrike(frame)) {
-            Log.i(TAG, "isStrike");
+        if (GameUtils.isRollAStrike(frame)) {
+            Log.d(TAG, "isStrike");
             frame.setBonusRolls(2);
-        } else if (isRollASpare(frame)) {
-            Log.i(TAG, "isSpare");
+        } else if (GameUtils.isRollASpare(frame)) {
+            Log.d(TAG, "isSpare");
             frame.setBonusRolls(1);
         }
     }
@@ -116,13 +162,13 @@ public class ScoreboardHandler {
             Frame previousFrame = i > 0 ? frames.get(i - 1) : null;
             if (isLastFrame(i)) {
                 List<Integer> rolls = frame.getRolls();
-                if (rolls.size() == 2 && frame.getTotalScore() < MAX_POINTS_FOR_ROLL/*(!GameUtils.isStrike(rolls.get(0)) && !isRollASpare(frame))*/) {
+                if (rolls.size() == 2 && frame.getTotalScore() < MAX_POINTS_FOR_ROLL) {
                     calculateCumulativeScoreForFrame(frame, previousFrame);
                 } else if (rolls.size() == 3) {
                     calculateCumulativeScoreForFrame(frame, previousFrame);
                 }
             } else {
-                if ((isRollAStrike(frame) || isRollASpare(frame))) {
+                if ((GameUtils.isRollAStrike(frame) || GameUtils.isRollASpare(frame))) {
                     if (frame.getBonusRolls() == 0) {
                         calculateCumulativeScoreForFrame(frame, previousFrame);
                     }
@@ -140,7 +186,7 @@ public class ScoreboardHandler {
         }
         cumulativeTotal += currentFrame.getTotalScore() + currentFrame.getBonusScore();
         currentFrame.setCumulativeScore(cumulativeTotal);
-        Log.i(TAG, "cumulativeScore(frameNumber:" + currentFrame.getFrameNumber() + ") = " + currentFrame.getCumulativeScore());
+        Log.d(TAG, "cumulativeScore(frameNumber:" + currentFrame.getFrameNumber() + ") = " + currentFrame.getCumulativeScore());
     }
 
     public List<Frame> getFrames() {
@@ -152,20 +198,20 @@ public class ScoreboardHandler {
     }
 
     private void updateBonusForPreviousFrames(List<Frame> frames, int currentFrameIndex, int points) {
-        Log.i(TAG, "addBonusForPreviousFrames(currentFrameIndex:" + currentFrameIndex + ", points: " + points + ")");
+        Log.d(TAG, "addBonusForPreviousFrames(currentFrameIndex:" + currentFrameIndex + ", points: " + points + ")");
         int i = currentFrameIndex - 2;
         if (i < 0) {
             i = 0;
         }
         if (currentFrameIndex > 0) {
-            Log.i(TAG, "currentFrameIndex > 0");
+            Log.d(TAG, "currentFrameIndex > 0");
             for (; i < currentFrameIndex; i++) {
                 int bonusRolls = frames.get(i).getBonusRolls();
-                Log.i(TAG, "(bonusRolls, frameIndex) = " + bonusRolls + "," + i);
+                Log.d(TAG, "(bonusRolls, frameIndex) = " + bonusRolls + "," + i);
                 if (bonusRolls > 0) {
-                    Log.i(TAG, "bonusRolls > 0");
+                    Log.d(TAG, "bonusRolls > 0");
                     frames.get(i).setBonusScore(frames.get(i).getBonusScore() + points);
-                    Log.i(TAG, "setBonusScore(frameIndex: " + i + ") = " + frames.get(i).getBonusScore());
+                    Log.d(TAG, "setBonusScore(frameIndex: " + i + ") = " + frames.get(i).getBonusScore());
                     frames.get(i).setBonusRolls(--bonusRolls);
                 }
             }
@@ -177,18 +223,6 @@ public class ScoreboardHandler {
                 currentFrameIndex < this.getFrames().size() && isValidPointFor(currentFrameIndex, points);
     }
 
-    private boolean isRollAStrike(@NonNull Frame frame) {
-        return frame.getRolls().size() == 1 && GameUtils.isStrike(frame.getTotalScore());
-    }
-
-    private boolean isRollAStrike(int frameIndex) {
-        return isRollAStrike(this.getFrames().get(frameIndex));
-    }
-
-    private boolean isRollASpare(@NonNull Frame frame) {
-        return frame.getRolls().size() == 2 && GameUtils.isSpare(frame.getRolls().get(1), frame.getRolls().get(0));
-    }
-
     private boolean isValidPointFor(int frameIndex, int points) {
         if (isLastFrame(frameIndex)) {
             return isValidForLastFrame(points);
@@ -196,6 +230,11 @@ public class ScoreboardHandler {
         return GameUtils.isValidPointWithPreviousPointAs(points, this.getFrames().get(frameIndex).getTotalScore());
     }
 
+    /**
+     * Validates whether the point is acceptable for the LastFrame.
+     * @param points
+     * @return
+     */
     private boolean isValidForLastFrame(int points) {
         Frame frame = this.getFrames().get(this.getFrames().size() - 1);
         List<Integer> rolls = frame.getRolls();
