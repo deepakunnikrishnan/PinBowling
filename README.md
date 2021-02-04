@@ -53,8 +53,7 @@ The main classes are:
 
 
 ## Screenshots
-![](screenshots/NormalGame.gif)
-![](screenshots/Reset.gif)
+![](screenshots/NewGame.gif)
 ![](screenshots/Landscape.png)
 
 
