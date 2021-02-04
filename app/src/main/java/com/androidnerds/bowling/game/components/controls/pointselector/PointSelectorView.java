@@ -24,7 +24,7 @@ import java.util.List;
 
 /**
  * <p>
- * A CompoundView to display list of possible points. The user has the option to select an item from the list.
+ * A CompoundView to display list of possible points. The user has the option to select an item from the selector.
  * This class is an extension of the {@link CardView} and contains:
  *  1. A Label - {@link android.widget.TextView}
  *  2. A {@link RecyclerView} for displaying the points.
@@ -40,7 +40,7 @@ import java.util.List;
  *  When the user selects an point from the selector, the class sends the selected point via {@link OnPointSelectedChangeListener#onPointSelected(int)}.
  *  </p>
  */
-@BindingMethods(@BindingMethod(type = PointSelectorView.class, attribute = "app:onPointSelected", method = "setOnPointSelectedChangeListener"))
+@BindingMethods(@BindingMethod(type = PointSelectorView.class, attribute = "game:onPointSelected", method = "setOnPointSelectedChangeListener"))
 public class PointSelectorView extends CardView {
 
     public interface OnPointSelectedChangeListener {

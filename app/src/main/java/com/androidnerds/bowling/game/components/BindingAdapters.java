@@ -8,9 +8,16 @@ import com.androidnerds.bowling.game.domain.model.Scoreboard;
 
 import java.util.List;
 
-public class BindingAdapters {
+/**
+ * Util class containing different BindingAdapter methods used as part of data-binding in the app.
+ */
+public final class BindingAdapters {
 
-    @BindingAdapter("app:possibleValues")
+    private BindingAdapters() {
+        //empty constructor
+    }
+
+    @BindingAdapter("game:possibleValues")
     public static void displayPoints(PointSelectorView pointSelectorView, List<Integer> possibleValues) {
         if(null == possibleValues) {
             return;
@@ -18,7 +25,7 @@ public class BindingAdapters {
         pointSelectorView.showPoints(possibleValues);
     }
 
-    @BindingAdapter("app:scoreboard")
+    @BindingAdapter("game:scoreboard")
     public static void displayPoints(ScoreboardView scoreboardView, Scoreboard scoreboard) {
         if(null == scoreboard) {
             return;

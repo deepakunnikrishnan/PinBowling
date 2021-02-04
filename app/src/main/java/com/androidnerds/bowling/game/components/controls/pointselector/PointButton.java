@@ -41,12 +41,6 @@ public class PointButton extends AppCompatButton {
                 context.getResources().getDimensionPixelSize(R.dimen.default_spacing),
                 context.getResources().getDimensionPixelSize(R.dimen.default_spacing));
         setBackground(ContextCompat.getDrawable(context, R.drawable.background_point_border));
-        //setForeground();
-        //setBackground(ContextCompat.getDrawable(context, android.R.drawable.s));
-        //TypedValue outValue = new TypedValue();
-        //getContext().getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
-        //setBackgroundResource(outValue.resourceId);
-        //android:foreground="?android:attr/selectableItemBackground"
         setTextColor(ContextCompat.getColor(getContext(), R.color.purple_700));
         setLayoutParams(new ViewGroup.LayoutParams(context.getResources().getDimensionPixelSize(R.dimen.default_point_button_width), context.getResources().getDimensionPixelSize(R.dimen.default_point_button_width)));
     }

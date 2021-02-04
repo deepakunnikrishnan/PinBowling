@@ -16,7 +16,15 @@ import com.androidnerds.bowling.databinding.LayoutScoreboardBinding;
 import com.androidnerds.bowling.game.domain.GameEngine;
 import com.androidnerds.bowling.game.domain.model.Scoreboard;
 
-public class ScoreboardView extends CardView implements GameEngine.OnScoreChangeListener {
+/**
+ * A CompoundView for displaying the scores for the bowling game.
+ * The class is an extension of the {@link CardView} forms a container. A layout is inflated.
+ * The layout contains recyclerview which is used to populate the scoreboard to the screen.
+ * <p>
+ * When the {@link Scoreboard} data changes, its updated to the view via {@link ScoreboardView#onScoreboardUpdated(Scoreboard)}
+ * </p>
+ */
+public class ScoreboardView extends CardView {
 
     private final Context context;
     private ScoreboardAdapter scoreboardAdapter;
@@ -60,7 +68,6 @@ public class ScoreboardView extends CardView implements GameEngine.OnScoreChange
         adapter.updateScoreboard(scoreboard);
     }
 
-    @Override
     public void onScoreboardUpdated(Scoreboard scoreboard) {
         updateScoreboard(scoreboardAdapter, scoreboard);
     }

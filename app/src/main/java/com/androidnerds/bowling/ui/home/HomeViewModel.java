@@ -57,7 +57,7 @@ public class HomeViewModel extends ViewModel implements GameEngine.OnPossibleVal
             gameEngine.roll(points);
         } catch (GameNotInitializedException e) {
             e.printStackTrace();
-            _messagesLiveData.postValue("Failed to start the game.");
+            _messagesLiveData.postValue("Please Reset the scoreboard.");
         }
     }
 

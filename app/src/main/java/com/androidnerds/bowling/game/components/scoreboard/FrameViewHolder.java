@@ -7,38 +7,31 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.androidnerds.bowling.R;
+import com.androidnerds.bowling.databinding.ItemFrameBinding;
 import com.androidnerds.bowling.game.domain.model.Frame;
 import com.androidnerds.bowling.game.domain.utils.GameUtils;
 
 import java.util.List;
 
+/**
+ * ViewHolder class representing the {@link Frame} in the {@link ScoreboardView}
+ *
+ */
 public class FrameViewHolder extends RecyclerView.ViewHolder {
 
-    private final View itemView;
-    private final TextView textViewFrameNumber;
-    private final TextView textViewFirstRoll;
-    private final TextView textViewSecondRoll;
-    private final TextView textViewThirdRoll;
-    private final TextView textViewCumulativeScore;
-
-
-    public FrameViewHolder(@NonNull View itemView) {
-        super(itemView);
-        this.itemView = itemView;
-        textViewFrameNumber = itemView.findViewById(R.id.textViewFrameNumber);
-        textViewFirstRoll = itemView.findViewById(R.id.textViewFirstRoll);
-        textViewSecondRoll = itemView.findViewById(R.id.textViewSecondRoll);
-        textViewThirdRoll = itemView.findViewById(R.id.textViewThirdRoll);
-        textViewCumulativeScore = itemView.findViewById(R.id.textViewCumulativeScore);
+    private ItemFrameBinding binding;
+    public FrameViewHolder(@NonNull ItemFrameBinding binding) {
+        super(binding.getRoot());
+        this.binding = binding;
     }
 
     public void bind(Frame frame) {
-        textViewFrameNumber.setText(String.valueOf(frame.getFrameNumber()));
+        binding.textViewFrameNumber.setText(String.valueOf(frame.getFrameNumber()));
         List<Integer> rolls = frame.getRolls();
         if (frame.isLastFrame()) {
-            textViewThirdRoll.setVisibility(View.VISIBLE);
+            binding.textViewThirdRoll.setVisibility(View.VISIBLE);
         } else {
-            textViewThirdRoll.setVisibility(View.GONE);
+            binding.textViewThirdRoll.setVisibility(View.GONE);
         }
         if (frame.getFrameStatus() == Frame.FrameStatus.EMPTY) {
             resetFrame(frame);
@@ -48,7 +41,7 @@ public class FrameViewHolder extends RecyclerView.ViewHolder {
                 setPoints(frame, rolls);
             }
             if (frame.getCumulativeScore() != -1) {
-                textViewCumulativeScore.setText(String.valueOf(frame.getCumulativeScore()));
+                binding.textViewCumulativeScore.setText(String.valueOf(frame.getCumulativeScore()));
             }
         }
     }
@@ -58,21 +51,21 @@ public class FrameViewHolder extends RecyclerView.ViewHolder {
     }
 
     private void setPoints(Frame frame, List<Integer> roll) {
-        textViewFirstRoll.setText(getStringValueForRoll(frame.getRolls().get(0)));
-        textViewSecondRoll.setText("");
+        binding.textViewFirstRoll.setText(getStringValueForRoll(frame.getRolls().get(0)));
+        binding.textViewSecondRoll.setText("");
         if (roll.size() >= 2) {
-            textViewSecondRoll.setText(getStringValueForRoll(frame.getRolls().get(1)));
+            binding.textViewSecondRoll.setText(getStringValueForRoll(frame.getRolls().get(1)));
         }
         if (frame.isLastFrame() && roll.size() == 3) {
-            textViewThirdRoll.setText(getStringValueForRoll(frame.getRolls().get(2)));
+            binding.textViewThirdRoll.setText(getStringValueForRoll(frame.getRolls().get(2)));
         }
     }
 
     private void resetFrame(Frame frame) {
-        textViewFirstRoll.setText("");
-        textViewSecondRoll.setText("");
-        textViewThirdRoll.setText("");
-        textViewCumulativeScore.setText("");
+        binding.textViewFirstRoll.setText("");
+        binding.textViewSecondRoll.setText("");
+        binding.textViewThirdRoll.setText("");
+        binding.textViewCumulativeScore.setText("");
         setBackgroundColor(frame);
     }
 

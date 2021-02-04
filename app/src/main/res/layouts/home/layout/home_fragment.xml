@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:game="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -24,8 +25,8 @@
             app:layout_constraintStart_toStartOf="@+id/guidelineStart"
             app:layout_constraintTop_toBottomOf="@+id/scoreboard"
             android:layout_marginTop="@dimen/default_margin"
-            app:onPointSelected="@{viewModel.onPointSelected}"
-            app:possibleValues="@{viewModel.possibleValues}"/>
+            game:onPointSelected="@{viewModel::onPointSelected}"
+            game:possibleValues="@{viewModel.possibleValues}"/>
 
         <com.androidnerds.bowling.game.components.scoreboard.ScoreboardView
             android:id="@+id/scoreboard"
@@ -35,13 +36,14 @@
             app:layout_constraintEnd_toStartOf="@+id/guidelineEnd"
             app:layout_constraintStart_toStartOf="@+id/guidelineStart"
             app:layout_constraintTop_toTopOf="parent"
-            app:scoreboard="@{viewModel.scoreboard}" />
+            game:scoreboard="@{viewModel.scoreboard}" />
 
 
         <Button
             android:id="@+id/buttonReset"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:layout_marginBottom="@dimen/default_margin"
             android:onClick="@{()-> viewModel.onResetClicked()}"
             android:text="@string/home_reset_label"
